@@ -3,31 +3,25 @@ import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import { getHabit } from '../utils/firebase';
 import { ProgressContext, UserContext } from "../contexts";
+import { Task } from '../components';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
     padding: 0 20px;
+    background-color: ${({ theme }) => theme.background};
 `;
 
-const List = styled.ScrollView`
+const List = styled.ScrollView.attrs(() => ({
+    contentContainerStyle: {
+        alignItems: 'center',
+    },
+}))`
     flex: 1;
     width: ${({ width }) => width - 40}px;
 `;
-
-const HabitItem = styled.View`
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    background-color: #f0f8ff;
-`;
-
-const HabitText = styled.Text`
-    font-size: 16px;
-    color: #333;
-`;
-
 
 const HabitHome = () => {
 
@@ -38,33 +32,59 @@ const HabitHome = () => {
 
     const [habits, setHabits] = useState([]);
 
+    // const deleteTask =( item ) => {
+    //     const updateHabits = habits.filter(habit => habit.id !== item.id);
+    //     setHabits(updateHabits);
+    // };
+
+    // const toggleTask = ( item ) => {
+    //     const updateHabits = habits.map(habit =>
+    //         habit.id === item.id ? { ...habit, completed: !habit.completed } : habit
+    //     );
+    //     setHabits(updateHabits);
+    // }
+
+    // const updateTask = ( habit ) => {
+    //     navigation.navigate('HabitDetail', habit );
+    //     console.log("전해지는 정보 : ", habit);
+    // };
+
+    const fetchHabits = async () => {
+        try {
+            spinner.start();
+            const userId = user.uid;
+            const data = await getHabit(userId);
+            setHabits(data);
+        } catch (e) {
+            console.error("Error fetching habits:", e.message);
+        } finally {
+            spinner.stop();
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchHabits();
+        }, [])
+    );
+
     useEffect(() => {
-        const fetchHabits = async () => {
-            try {
-                spinner.start();
-                const userId = user.uid;
-                const data = await getHabit(userId);
-                setHabits(data);
-            } catch (e) {
-                console.error("Error fetching habits:", error.message);
-            } finally {
-                spinner.stop();
-            }
-        };
-        fetchHabits();
-    }, []);
+
+    },[]);
 
     return (
         <Container>
             <List width={width}>
-            {habits.map((habit) => (
-                    <HabitItem key={habit.id}>
-                        <HabitText>계획: {habit.project}</HabitText>
-                        <HabitText>하루 목표: {habit.goal}</HabitText>
-                        <HabitText>목표 일수: {habit.date}</HabitText>
-                        <HabitText>종료일: {new Date(habit.finishDay.seconds * 1000).toLocaleDateString()}</HabitText>
-                    </HabitItem>
-                ))}
+                {Object.values(habits)
+                        .reverse()
+                        .map(habit => (
+                            <Task key={habit.id}
+                                item={habit}
+                                // deleteTask={deleteTask}
+                                // toggleTask={toggleTask}
+                                // updateTask={updateTask}
+                            />
+                        ))}
             </List>
         </Container>
     );

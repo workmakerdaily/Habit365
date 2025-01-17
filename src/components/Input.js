@@ -19,7 +19,7 @@ const StyledTextInput = styled.TextInput.attrs(({ theme }) => ({
     placeholderTextColor: theme.inputPlaceholder,
 }))`
     background-color: ${({ theme, editable }) => 
-        editable ? theme.background : theme.inputDisabledBackground};
+        editable ? theme.inputAbledBackground : theme.inputDisabledBackground};
     color: ${({ theme }) => theme.text};
     padding: 20px 10px;
     font-size: 16px;

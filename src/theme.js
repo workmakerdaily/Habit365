@@ -1,10 +1,14 @@
 const colors = {
     white: '#ffffff',
+    white_1: '#ddd',
     black: '#000000',
     grey_0: '#d5d5d5',
     grey_1: '#a6a6a6',
+    grey_2: '#666',
+    grey_3: '#333',
     red: '#e84118',
     red_1: '#F28B82',
+    red_2: '#ff4d4d',
     blue: '#3679fe',
     green_0: '#5FA969',
     green_1: '#3E744E',
@@ -24,6 +28,7 @@ export const theme = {
     label: colors.grey_1,
     inputPlaceholder: colors.grey_1,
     inputBorder: colors.grey_1,
+    inputAbledBackground: colors.white,
     inputDisabledBackground: colors.grey_0,
 
     buttonBackground: colors.green_0,
@@ -40,4 +45,18 @@ export const theme = {
     spinnerBackground: colors.black,
     spinnerIndicator: colors.white,
 
+    habitBackground: colors.white,
+    habitTask: colors.white_1,
+    habitText: colors.black,
+    habitDone: colors.grey_1,
+
+    detailTitle: colors.grey_3,
+    detailText: colors.grey_2,
+    checkboxItem: colors.white,
+    checkboxBorder: colors.grey_3,
+    checkboxChecked: colors.grey_2,
+    checkboxUnChekced: colors.white,
+    ItemText: colors.grey_3,
+    deleteButton: colors.red_2,
+    deleteText: colors.white,
 };

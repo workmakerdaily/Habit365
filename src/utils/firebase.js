@@ -5,7 +5,7 @@ import {
     updateProfile,
 } from 'firebase/auth';
 import { firebaseApp, auth, db, storage } from "../../firebaseConfig";
-import { collection, addDoc, query, where, getDocs, updateDoc, getDoc, doc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, updateDoc, getDoc, doc, deleteDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { scheduleUserHabitNotification } from './Notification';
 
@@ -155,6 +155,37 @@ export const deleteHabit = async (habitId) => {
     } catch (error) {
         console.error("[습관 삭제 실패]:", error.message);
         throw error;
+    }
+};
+
+export const updateCheckboxState = async (habitId, checkboxes, date) => {
+    try {
+        const habitRef = doc(db, "habits", habitId);
+        await updateDoc(habitRef, {
+            checkboxes,
+            lastUpdatedDate: date,
+        });
+        console.log("체크박스 상태가 업데이트되었습니다.");
+    } catch (error) {
+        console.error("체크박스 상태 업데이트 실패:", error.message);
+    }
+};
+
+export const getCheckboxState = async (habitId) => {
+    try {
+        const habitRef = doc(db, "habits", habitId);
+        const snapshot = await getDoc(habitRef);
+        if (snapshot.exists()) {
+            const data = snapshot.data();
+            return {
+                checkboxes: data.checkboxes || [],
+                lastUpdatedDate: data.lastUpdatedDate || null,
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error("체크박스 상태 불러오기 실패:", error.message);
+        return null;
     }
 };
 

@@ -97,12 +97,12 @@ const Login = ({ navigation }) => {
                 />
                 <ErrorText>{errorMessage}</ErrorText>
                 <Button
-                    title="Login"
+                    title="로그인"
                     onPress={_handleLoginButtonPress}
                     disabled={disabled}
                 />
                 <Button
-                    title="Sign up with email"
+                    title="회원가입"
                     onPress={() => navigation.navigate('Signup')}
                     isFilled={false}
                 />
