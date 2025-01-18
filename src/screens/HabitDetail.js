@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/native';
-import { Alert, FlatList } from 'react-native';
-import { updateCheckboxState, getCheckboxState, deleteHabit } from '../utils/firebase';
+import { Alert } from 'react-native';
+import { updateCheckboxState, getCheckboxState, deleteHabit, updateHabitCompletionStatus } from '../utils/firebase';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -10,10 +10,6 @@ const Container = styled.View`
     flex: 1;
     background-color: ${({ theme }) => theme.background};
     padding: 20px;
-`;
-
-const Header = styled.View`
-    margin-bottom: 20px;
 `;
 
 const Title = styled.Text`
@@ -34,22 +30,30 @@ const ListContainer = styled.View`
     margin-top: 20px;
 `;
 
-const CheckboxItem = styled.View`
+const Row = styled.View`
     flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+`;
+
+const CheckboxItem = styled.View`
+    flex: 1;
+    flex-basis: 30%;
+    max-width: 30%;
     align-items: center;
     background-color: ${({ theme }) => theme.checkboxItem};
     padding: 15px;
-    margin-bottom: 10px;
     border-radius: 10px;
     shadow-color: #000;
     shadow-offset: 0px 3px;
     shadow-opacity: 0.1;
     shadow-radius: 4px;
     elevation: 3;
+    margin: 5px;
 `;
 
 const CheckboxIcon = styled.TouchableOpacity`
-    margin-right: 10px;
+    margin-bottom: 10px;
 `;
 
 const ItemText = styled.Text`
@@ -105,6 +109,8 @@ const HabitDetail = ({ route }) => {
                     const resetCheckboxes = Array.from({ length: habit.goal }, () => false);
                     setCheckboxes(resetCheckboxes);
                     await updateCheckboxState(habit.id, resetCheckboxes, today);
+
+                    await updateHabitCompletionStatus(habit.id, false);
                 } else {
                     setCheckboxes(savedCheckboxes);
                 }
@@ -120,64 +126,60 @@ const HabitDetail = ({ route }) => {
 
         const today = new Date().toISOString().split('T')[0];
         await updateCheckboxState(habit.id, updatedCheckboxes, today);
+
+        const isCompleted = updatedCheckboxes.every((checkbox) => checkbox === true);
+        await updateHabitCompletionStatus(habit.id, isCompleted);
     };
 
     const handleDeleteHabit = async () => {
-        Alert.alert('삭제 확인',`${habit.project}를(을) 삭제하시겠습니까?`,
-            [
-                { text: '취소', style: 'cancel', },
-                {text: '삭제', style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await deleteHabit(habit.id);
-                            Alert.alert('삭제 성공', '습관이 삭제되었습니다.');
-                            navigation.goBack();
-                        } catch (e) {
-                            console.error("[삭제 실패]", e.message);
-                            Alert.alert('삭제 실패', '삭제 중 오류가 발생하였습니다.');
-                        }
-                    },
+        Alert.alert('삭제 확인', `${habit.project}를(을) 삭제하시겠습니까?`, [
+            { text: '취소', style: 'cancel' },
+            {
+                text: '삭제',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await deleteHabit(habit.id);
+                        Alert.alert('삭제 성공', '습관이 삭제되었습니다.');
+                        navigation.goBack();
+                    } catch (e) {
+                        console.error('[삭제 실패]', e.message);
+                        Alert.alert('삭제 실패', '삭제 중 오류가 발생하였습니다.');
+                    }
                 },
-            ], { cancelable: true }
-        );
+            },
+        ]);
     };
 
     return (
         <Container>
-            <Header>
-                <Title>{habit.project}</Title>
-                <Text>하루 목표: {habit.goal}</Text>
-                <Text>목표 일수: {habit.date}</Text>
-                <Text>완료 상태: {habit.completed ? '완료' : '미완료'}</Text>
-                <DeleteButton onPress={handleDeleteHabit} activeOpacity={0.8}>
-    <Gradient
-        colors={['#ff6f61', '#ff4d4d']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-    >
-        <MaterialIcons name="delete" size={20} color="#fff" />
-        <DeleteText>삭제</DeleteText>
-    </Gradient>
-</DeleteButton>
-            </Header>
+            <Title>{habit.project}</Title>
+            <Text>하루 목표: {habit.goal}</Text>
+            <Text>목표 일수: {habit.date}</Text>
+            <DeleteButton onPress={handleDeleteHabit} activeOpacity={0.8}>
+                <Gradient colors={['#ff6f61', '#ff4d4d']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+                    <MaterialIcons name="delete" size={20} color="#fff" />
+                    <DeleteText>삭제</DeleteText>
+                </Gradient>
+            </DeleteButton>
 
             <ListContainer>
-                <FlatList
-                    data={checkboxes}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => (
-                        <CheckboxItem>
-                            <CheckboxIcon onPress={() => handleCheckboxToggle(index)}>
-                    <MaterialIcons
-                        name={item ? "check-box" : "check-box-outline-blank"}
-                        size={24}
-                        color={item ? "#333" : "#ccc"}
-                    />
-                </CheckboxIcon>
-                            <ItemText>{`${index + 1} 회차`}</ItemText>
-                        </CheckboxItem>
-                    )}
-                />
+                {Array.from({ length: Math.ceil(checkboxes.length / 3) }).map((_, rowIndex) => (
+                    <Row key={rowIndex}>
+                        {checkboxes.slice(rowIndex * 3, rowIndex * 3 + 3).map((item, index) => (
+                            <CheckboxItem key={rowIndex * 3 + index}>
+                                <CheckboxIcon onPress={() => handleCheckboxToggle(rowIndex * 3 + index)}>
+                                    <MaterialIcons
+                                        name={item ? 'check-box' : 'check-box-outline-blank'}
+                                        size={24}
+                                        color={item ? '#333' : '#ccc'}
+                                    />
+                                </CheckboxIcon>
+                                <ItemText>{`${rowIndex * 3 + index + 1} 회차`}</ItemText>
+                            </CheckboxItem>
+                        ))}
+                    </Row>
+                ))}
             </ListContainer>
         </Container>
     );

@@ -3,7 +3,7 @@ import Signup from "./Signup";
 import HabitAdd from "./HabitAdd";
 import HabitHome from "./HabitHome";
 import HabiltDetail from "./HabitDetail";
-import NotificationUI from "./NotificationUI";
+import NotificationMain from "./NotificationMain";
 
 
-export { Login, Signup, HabitAdd, HabitHome, HabiltDetail, NotificationUI };
+export { Login, Signup, HabitAdd, HabitHome, HabiltDetail, NotificationMain };

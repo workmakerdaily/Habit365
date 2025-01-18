@@ -112,6 +112,7 @@ export const getHabit = async (userId) => {
         const habits = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
+            isCompleted: doc.data().isCompleted ?? false,
         }));
 
         console.log(`[습관 조회 성공] 조회된 습관 수: ${habits.length}`);
@@ -189,3 +190,13 @@ export const getCheckboxState = async (habitId) => {
     }
 };
 
+export const updateHabitCompletionStatus = async (habitId, isCompleted) => {
+    try {
+        const habitRef = doc(db, "habits", habitId); // Firestore `doc` 참조 방식으로 수정
+        await updateDoc(habitRef, { isCompleted });
+        console.log(`[습관 완료 상태 업데이트 성공] 문서 ID: ${habitId}, isCompleted: ${isCompleted}`);
+    } catch (error) {
+        console.error("[습관 완료 상태 업데이트 실패]:", error.message);
+        throw error;
+    }
+};

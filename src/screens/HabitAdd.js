@@ -43,14 +43,22 @@ const HabitAdd = () => {
         setProject(text);
     };
 
-    const handleGoalChange = ( text ) => {
+    const handleGoalChange = (text) => {
         const regex = text.replace(/[^0-9]/g, '');
-        setGoal(regex);
+        if (regex === '' || parseInt(regex, 10) < 1) {
+            setGoal('');
+        } else {
+            setGoal(regex);
+        }
     };
-
-    const handleDateChange = ( text ) => {
+    
+    const handleDateChange = (text) => {
         const regex = text.replace(/[^0-9]/g, '');
-        setDate(regex);
+        if (regex === '' || parseInt(regex, 10) < 1) {
+            setDate('');
+        } else {
+            setDate(regex);
+        }
     };
 
     const handleAddHabit = async () => {
@@ -72,6 +80,9 @@ const HabitAdd = () => {
     try {
         await addHabit(habitData);
         Alert.alert('성공적으로 등록되었습니다.');
+        setProject('');
+        setGoal('');
+        setDate('');
     } catch (e) {
         Alert.alert('습관 추가 중 오류가 발생하였습니다. 다시 시도해주세요.')
     }

@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MainTab from "./MainTab";
 import HabitDetail from "../screens/HabitDetail";
 import { ThemeContext } from "styled-components/native";
+import NotificationDetail from "../screens/NotificationDetail";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const MainStack = () => {
         >
             <Stack.Screen name="MainTab" component={MainTab} />
             <Stack.Screen name="HabitDetail" component={HabitDetail} />
+            <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
         </Stack.Navigator>
     );
 

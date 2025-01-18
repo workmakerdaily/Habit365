@@ -46,8 +46,11 @@ export const theme = {
     spinnerIndicator: colors.white,
 
     habitBackground: colors.white,
+    unHabitBackground: colors.grey_0,
     habitTask: colors.white_1,
+    unHabitTask: colors.grey_1,
     habitText: colors.black,
+    unHabitText: colors.grey_2,
     habitDone: colors.grey_1,
 
     detailTitle: colors.grey_3,
@@ -59,4 +62,5 @@ export const theme = {
     ItemText: colors.grey_3,
     deleteButton: colors.red_2,
     deleteText: colors.white,
+
 };

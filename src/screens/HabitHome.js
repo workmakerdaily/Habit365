@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components/native';
-import { Dimensions } from 'react-native';
-import { getHabit } from '../utils/firebase';
+import { Dimensions, Alert } from 'react-native';
+import { getHabit, deleteHabit } from '../utils/firebase';
 import { ProgressContext, UserContext } from "../contexts";
 import { Task } from '../components';
 import { useFocusEffect } from '@react-navigation/native';
@@ -24,7 +24,6 @@ const List = styled.ScrollView.attrs(() => ({
 `;
 
 const HabitHome = () => {
-
     const width = Dimensions.get('window').width;
 
     const { user } = useContext(UserContext);
@@ -32,29 +31,36 @@ const HabitHome = () => {
 
     const [habits, setHabits] = useState([]);
 
-    // const deleteTask =( item ) => {
-    //     const updateHabits = habits.filter(habit => habit.id !== item.id);
-    //     setHabits(updateHabits);
-    // };
-
-    // const toggleTask = ( item ) => {
-    //     const updateHabits = habits.map(habit =>
-    //         habit.id === item.id ? { ...habit, completed: !habit.completed } : habit
-    //     );
-    //     setHabits(updateHabits);
-    // }
-
-    // const updateTask = ( habit ) => {
-    //     navigation.navigate('HabitDetail', habit );
-    //     console.log("전해지는 정보 : ", habit);
-    // };
-
     const fetchHabits = async () => {
         try {
             spinner.start();
             const userId = user.uid;
             const data = await getHabit(userId);
-            setHabits(data);
+
+            const currentTime = new Date();
+            const updatedHabits = [];
+
+            for (const habit of data) {
+                const finishDate = new Date(habit.finishDay);
+                finishDate.setDate(finishDate.getDate() + 1);
+                finishDate.setHours(12, 0, 0, 0);
+
+                if (currentTime >= finishDate) {
+                    try {
+                        await deleteHabit(habit.id);
+                        Alert.alert('습관 삭제', `${habit.project} 습관이 완료되어 삭제되었습니다.`);
+                    } catch (error) {
+                        console.error(`[자동 삭제 실패] 습관 ID: ${habit.id}`, error.message);
+                    }
+                } else {
+                    updatedHabits.push({
+                        ...habit,
+                        isCompleted: habit.isCompleted ?? false,
+                    });
+                }
+            }
+
+            setHabits(updatedHabits);
         } catch (e) {
             console.error("Error fetching habits:", e.message);
         } finally {
@@ -68,23 +74,18 @@ const HabitHome = () => {
         }, [])
     );
 
-    useEffect(() => {
-
-    },[]);
-
     return (
         <Container>
             <List width={width}>
-                {Object.values(habits)
-                        .reverse()
-                        .map(habit => (
-                            <Task key={habit.id}
-                                item={habit}
-                                // deleteTask={deleteTask}
-                                // toggleTask={toggleTask}
-                                // updateTask={updateTask}
-                            />
-                        ))}
+                {habits
+                    .reverse()
+                    .map((habit) => (
+                        <Task
+                            key={habit.id}
+                            item={habit}
+                            isCompleted={habit.isCompleted}
+                        />
+                    ))}
             </List>
         </Container>
     );

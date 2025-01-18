@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
-import { HabitHome, HabitAdd, NotificationUI } from "../screens";
+import { HabitHome, HabitAdd, NotificationMain } from "../screens";
 import { ThemeContext } from "styled-components/native";
 
 
@@ -47,6 +47,7 @@ const MainTab = ({ navigation, route }) => {
             screenOptions={{
                 tabBarActiveTintColor: theme.tabBarActiveTintColor,
                 tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
+                tabBarShowLabel: false,
             }}
         >
             <Tab.Screen
@@ -56,7 +57,7 @@ const MainTab = ({ navigation, route }) => {
                     tabBarIcon: ({ focused }) =>
                         TabBarIcon({
                             focused,
-                            name: focused ? 'event' : 'event-note',
+                            name: focused ? 'list-alt' : 'list',
                         }),
                     headerShown: false,
                 }}
@@ -74,13 +75,13 @@ const MainTab = ({ navigation, route }) => {
                 }}
             />
             <Tab.Screen
-                name="Notification"
-                component={NotificationUI}
+                name="NotificationMain"
+                component={NotificationMain}
                 options={{
                     tabBarIcon: ({ focused }) =>
                         TabBarIcon({
                             focused,
-                            name: focused ? 'add-circle' : 'add-circle-outline',
+                            name: focused ? 'notifications-active' : 'notifications-none',
                         }),
                     headerShown: false,
                 }}
