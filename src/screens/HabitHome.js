@@ -37,15 +37,21 @@ const HabitHome = () => {
             const userId = user.uid;
             const data = await getHabit(userId);
 
-            const currentTime = new Date();
+            // 현재 한국 시간 기준으로 날짜와 시간을 가져오기
+            const now = new Date();
+            const koreanTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC -> KST
+            console.log("현재 한국 시간:", koreanTime);
+
             const updatedHabits = [];
 
             for (const habit of data) {
                 const finishDate = new Date(habit.finishDay);
-                finishDate.setDate(finishDate.getDate() + 1);
-                finishDate.setHours(12, 0, 0, 0);
+                finishDate.setDate(finishDate.getDate() + 1); // 다음날
+                finishDate.setHours(12, 0, 0, 0); // 한국 시간 정오 설정
 
-                if (currentTime >= finishDate) {
+                console.log(`습관 마감 시간: ${finishDate}, 현재 한국 시간: ${koreanTime}`);
+
+                if (koreanTime >= finishDate) {
                     try {
                         await deleteHabit(habit.id);
                         Alert.alert('습관 삭제', `${habit.project} 습관이 완료되어 삭제되었습니다.`);

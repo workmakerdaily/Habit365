@@ -4,8 +4,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { HabitHome, HabitAdd, NotificationMain } from "../screens";
 import { ThemeContext } from "styled-components/native";
 
-
-
 const Tab = createBottomTabNavigator();
 
 const TabBarIcon = ({ focused, name }) => {

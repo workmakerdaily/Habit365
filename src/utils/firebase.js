@@ -88,10 +88,12 @@ export const addHabit = async (habitData) => {
         const user = auth.currentUser;
         if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
+        const koreanTime = new Date(new Date().getTime() + 9 * 60 * 60 * 1000); // 한국 시간
+
         const docRef = await addDoc(collection(db, "habits"), {
             ...habitData,
-            userId: user.uid, // 로그인한 사용자 ID 추가
-            createdAt: new Date(),
+            userId: user.uid,
+            createdAt: koreanTime, // 한국 시간으로 저장
         });
         console.log(`[습관 추가 성공] 문서 ID: ${docRef.id}`);
         
@@ -109,11 +111,25 @@ export const getHabit = async (userId) => {
         const q = query(collection(db, "habits"), where("userId", "==", userId));
         const snapshot = await getDocs(q);
 
-        const habits = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-            isCompleted: doc.data().isCompleted ?? false,
-        }));
+        const habits = [];
+        const now = new Date();
+        const koreanTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // 한국 시간
+        const today = koreanTime.toISOString().split('T')[0];
+
+        for (const docSnapshot of snapshot.docs) {
+            const habitData = docSnapshot.data();
+            const lastUpdatedDate = habitData.lastUpdatedDate;
+
+            if (lastUpdatedDate !== today) {
+                const resetCheckboxes = Array.from({ length: habitData.goal }, () => false);
+                await updateCheckboxState(docSnapshot.id, resetCheckboxes, today);
+                await updateHabitCompletionStatus(docSnapshot.id, false);
+                habitData.checkboxes = resetCheckboxes;
+                habitData.lastUpdatedDate = today;
+            }
+
+            habits.push({ id: docSnapshot.id, ...habitData });
+        }
 
         console.log(`[습관 조회 성공] 조회된 습관 수: ${habits.length}`);
         return habits;
@@ -127,16 +143,13 @@ export const updateHabit = async (habitId, newProgress) => {
     try {
         const habitRef = doc(db, "habits", habitId);
 
-        // 문서 존재 여부 확인
         const docSnapshot = await getDoc(habitRef);
         if (!docSnapshot.exists()) {
             throw new Error(`문서를 찾을 수 없습니다. ID: ${habitId}`);
         }
 
-        // Firestore에서 문서 업데이트
         await updateDoc(habitRef, { progress: newProgress });
 
-        // 업데이트된 문서 데이터를 가져와 반환
         const updatedDoc = await getDoc(habitRef);
         console.log(`[습관 진행률 업데이트 성공] 문서 ID: ${habitId}`);
         return { id: habitId, ...updatedDoc.data() };
@@ -150,7 +163,6 @@ export const deleteHabit = async (habitId) => {
     try {
         const habitRef = doc(db, "habits", habitId);
 
-        // 문서 삭제
         await deleteDoc(habitRef);
         console.log(`[습관 삭제 성공] 문서 ID: ${habitId}`);
     } catch (error) {
@@ -162,15 +174,47 @@ export const deleteHabit = async (habitId) => {
 export const updateCheckboxState = async (habitId, checkboxes, date) => {
     try {
         const habitRef = doc(db, "habits", habitId);
-        await updateDoc(habitRef, {
-            checkboxes,
-            lastUpdatedDate: date,
-        });
-        console.log("체크박스 상태가 업데이트되었습니다.");
+        const snapshot = await getDoc(habitRef);
+
+        if (snapshot.exists()) {
+            const habitData = snapshot.data();
+            const lastUpdatedDate = habitData.lastUpdatedDate || null;
+
+            // 한국 시간 계산
+            const now = new Date();
+            const koreanTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC -> KST
+            const today = koreanTime.toISOString().split('T')[0]; // "YYYY-MM-DD" 형식
+
+            console.log(`오늘 날짜(KST): ${today}, Firestore 저장된 날짜: ${lastUpdatedDate}`); // 로그 추가
+
+            // 날짜가 다를 경우 초기화
+            if (lastUpdatedDate !== today) {
+                console.log("날짜가 다릅니다. 체크박스를 초기화합니다.");
+                const resetCheckboxes = Array.from({ length: habitData.goal }, () => false);
+
+                await updateDoc(habitRef, {
+                    checkboxes: resetCheckboxes,
+                    lastUpdatedDate: today,
+                });
+
+                console.log("체크박스가 초기화되었고 Firestore에 업데이트되었습니다.");
+            } else {
+                console.log("날짜가 동일합니다. 체크박스를 업데이트합니다.");
+                await updateDoc(habitRef, {
+                    checkboxes,
+                    lastUpdatedDate: today, // 동일한 날짜라도 업데이트
+                });
+
+                console.log("체크박스 상태가 업데이트되었습니다.");
+            }
+        } else {
+            console.error("습관 문서를 찾을 수 없습니다.");
+        }
     } catch (error) {
         console.error("체크박스 상태 업데이트 실패:", error.message);
     }
 };
+
 
 export const getCheckboxState = async (habitId) => {
     try {
@@ -192,7 +236,7 @@ export const getCheckboxState = async (habitId) => {
 
 export const updateHabitCompletionStatus = async (habitId, isCompleted) => {
     try {
-        const habitRef = doc(db, "habits", habitId); // Firestore `doc` 참조 방식으로 수정
+        const habitRef = doc(db, "habits", habitId);
         await updateDoc(habitRef, { isCompleted });
         console.log(`[습관 완료 상태 업데이트 성공] 문서 ID: ${habitId}, isCompleted: ${isCompleted}`);
     } catch (error) {
