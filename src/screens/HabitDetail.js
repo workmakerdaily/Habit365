@@ -38,12 +38,11 @@ const Row = styled.View`
 
 const CheckboxItem = styled.View`
     flex: 1;
-    flex-basis: 30%;
     max-width: 30%;
     align-items: center;
     background-color: ${({ theme }) => theme.checkboxItem};
     padding: 15px;
-    border-radius: 10px;
+    border-radius: 16px;
     shadow-color: #000;
     shadow-offset: 0px 3px;
     shadow-opacity: 0.1;

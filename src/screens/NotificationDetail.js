@@ -180,7 +180,10 @@ const NotificationDetail = ({ route }) => {
                     <AlarmTitle>알람 {index + 1}</AlarmTitle>
                     <TimeText>
                         {alarm.time
-                            ? `선택된 알람 시간: ${alarm.time.toLocaleTimeString()}`
+                            ? `선택된 알람 시간: ${alarm.time.toLocaleTimeString([], {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                            })}`
                             : '알람 시간이 설정되지 않았습니다.'}
                     </TimeText>
                     <ButtonRow>

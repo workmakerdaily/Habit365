@@ -94,7 +94,7 @@ const Signup = () => {
                 onChangeImage={url => setPhotoUrl(url)}
                 />
                 <Input
-                    label="Name"
+                    label="이름"
                     value={name}
                     onChangeText={text => setName(text)}
                     onSubmitEditing={() => {
@@ -102,35 +102,35 @@ const Signup = () => {
                         emailRef.current.focus();
                     }}
                     onBlur={() => setName(name.trim())}
-                    placeholder="Name"
+                    placeholder="이름을 입력하세요."
                     returnKeyType="next"
                 />
                 <Input
                     ref={emailRef}
-                    label="Email"
+                    label="이메일"
                     value={email}
                     onChangeText={text => setEmail(removeWhitespace(text))}
                     onSubmitEditing={() => passwordRef.current.focus()}
-                    placeholder="Email"
+                    placeholder="이메일을 입력하세요."
                     returnKeyType="next"
                 />
                 <Input
                     ref={passwordRef}
-                    label="Password"
+                    label="비밀번호"
                     value={password}
                     onChangeText={text => setPassword(removeWhitespace(text))}
                     onSubmitEditing={() => passwordConfirmRef.current.focus()}
-                    placeholder="Password"
+                    placeholder="비밀번호를 입력하세요"
                     returnKeyType="done"
                     isPassword
                 />
                 <Input
                     ref={passwordConfirmRef}
-                    label="Password Confirm"
+                    label="비밀번호 확인"
                     value={passwordConfirm}
                     onChangeText={text => setPasswordConfirm(removeWhitespace(text))}
                     onSubmitEditing={_handleSignupButtonPress}
-                    placeholder="Password"
+                    placeholder="위와 동일한 비밀번호를 입력해주세요."
                     returnKeyType="done"
                     isPassword
                 />

@@ -4,36 +4,27 @@ import PropTypes from 'prop-types';
 import IconButton from './IconButton';
 import { images } from '../utils/images';
 import Input from './Input';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Container = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
-    background-color: ${({ theme, isCompleted }) => 
-        isCompleted ? theme.unHabitBackground : theme.habitBackground};
+    justify-content: space-between;
+    background-color: ${({ theme }) => theme.habitBackground};
     border-radius: 12px;
     border: 1px solid ${({ theme, isCompleted }) => 
         isCompleted ? theme.unHabitTask : theme.habitTask};
     padding: 15px 20px;
     margin: 8px 0px;
-
-    /* iOS */
-    shadow-color: #000;
-    shadow-offset: 0px 2px;
-    shadow-opacity: 0.1;
-    shadow-radius: 4px;
-
-    /* Android */
-    elevation: 3;
 `;
 
 const Contents = styled.Text`
     flex: 1;
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: 600;
     color: ${({ theme, isCompleted }) => 
         isCompleted ? theme.unHabitText : theme.habitText};
-    text-decoration-line: ${({ isCompleted }) =>
-        isCompleted ? 'line-through' : 'none'};
 `;
 
 const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
@@ -52,14 +43,14 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
     };
 
     return (
-        <Container onPress={onPress} isCompleted={item.isCompleted}>
+        <Container onPress={onPress} isCompleted={route.name === 'HabitHome' ? item.isCompleted : false}>
             {/* <IconButton
                 type={item.completed ? images.completed : images.uncompleted}
                 id={item.id}
                 onPressOut={toggleTask}
                 completed={item.completed}
             /> */}
-            <Contents isCompleted={item.isCompleted}>{item.project}</Contents>
+            <Contents isCompleted={route.name === 'HabitHome' ? item.isCompleted : false}>{item.project}</Contents>
             {/* <IconButton
                 type={images.update}
                 id={item.id}
@@ -72,6 +63,21 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
                 onPressOut={deleteTask}
                 completed={item.completed}
             /> */}
+            {route.name === 'HabitHome' && (
+                item.isCompleted ? (
+                    <MaterialIcons
+                        name="task-alt"
+                        size={24}
+                        color="grey"
+                    />
+                ) : (
+                    <MaterialIcons
+                        name="radio-button-unchecked"
+                        size={24}
+                        color="black"
+                    />
+                )
+            )}
         </Container>
 
     );

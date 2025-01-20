@@ -10,6 +10,7 @@ import { ProgressContext, UserContext } from "../contexts";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Alert } from "react-native";
 
+
 const LogoutButton = styled.TouchableOpacity`
     margin-right: 16px;
 `;
@@ -67,8 +68,22 @@ const MainStack = () => {
                     )
                 }}
             />
-            <Stack.Screen name="HabitDetail" component={HabitDetail} />
-            <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
+            <Stack.Screen
+                name="HabitDetail"
+                component={HabitDetail}
+                options={{
+                    headerTitle: "",
+                    headerBackTitle: "",
+                }}
+            />
+            <Stack.Screen
+                name="NotificationDetail"
+                component={NotificationDetail}
+                options={{
+                    headerTitle: "",
+                    headerBackTitle: "",
+                }}
+            />
         </Stack.Navigator>
     );
 

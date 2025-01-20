@@ -30,7 +30,6 @@ const MainTab = ({ navigation, route }) => {
             headerTitle: titles[index],
             headerTitleStyle: {
                 fontSize: 24,
-                fontWeight: "bold",
                 color: theme.title,
             },
         });

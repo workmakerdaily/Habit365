@@ -8,7 +8,7 @@ const Container = styled.TouchableOpacity`
     background-color: ${({ theme, isFilled }) =>
         isFilled ? theme.buttonBackground : TRANSPARENT};
     align-items: center;
-    border-radius: 25px;
+    border-radius: 8px;
     width: 100%;
     padding: 10px;
     opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};

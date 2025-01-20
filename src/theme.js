@@ -28,6 +28,7 @@ export const theme = {
     label: colors.grey_1,
     inputPlaceholder: colors.grey_1,
     inputBorder: colors.grey_1,
+    inputBorderActive: colors.black,
     inputAbledBackground: colors.white,
     inputDisabledBackground: colors.grey_0,
 
@@ -46,11 +47,10 @@ export const theme = {
     spinnerIndicator: colors.white,
 
     habitBackground: colors.white,
-    unHabitBackground: colors.grey_0,
-    habitTask: colors.white_1,
-    unHabitTask: colors.grey_1,
+    habitTask: colors.grey_3,
+    unHabitTask: colors.grey_0,
     habitText: colors.black,
-    unHabitText: colors.grey_2,
+    unHabitText: colors.grey_1,
     habitDone: colors.grey_1,
 
     detailTitle: colors.grey_3,

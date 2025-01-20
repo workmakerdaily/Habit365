@@ -9,17 +9,16 @@ import { Task } from "../components";
 
 const Container = styled.View`
     flex: 1;
-    justify-content: center;
     align-items: center;
     background-color: ${({ theme }) => theme.background};
-    padding: ${({ height }) => height * 0.05}px 20px;
+    padding-top : 20px;
 `;
 
 const Title = styled.Text`
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
-    color: ${({ theme }) => theme.title};
-    margin-bottom: 20px;
+    color: ${({ theme }) => theme.text};
+    margin-bottom: 8px;
 `;
 
 const NotificationButton = styled.TouchableOpacity`

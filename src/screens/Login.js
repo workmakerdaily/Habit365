@@ -78,20 +78,20 @@ const Login = ({ navigation }) => {
             <Container insets={insets}>
                 <Image url={images.logo} imageStyle={{ borderRadius: 8 }} />
                 <Input
-                    label="Email"
+                    label="이메일"
                     value={email}
                     onChangeText={_handleEmailChange}
                     onSubmitEditing={() => passwrodRef.current.focus()}
-                    placeholder="Email"
+                    placeholder="이메일을 입력하세요."
                     returnKeyType="next"
                 />
                 <Input
                     ref={passwrodRef}
-                    label="Password"
+                    label="비밀번호"
                     value={password}
                     onChangeText={_handlePasswordChange}
                     onSubmitEditing={_handleLoginButtonPress}
-                    placeholder="Password"
+                    placeholder="비밀번호를 입력하세요."
                     returnKeyType="done"
                     isPassword
                 />

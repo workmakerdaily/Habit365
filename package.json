@@ -35,7 +35,8 @@
     "react-native-screens": "^4.5.0",
     "react-native-svg": "^15.8.0",
     "react-navigation": "^5.0.0",
-    "styled-components": "^6.1.14"
+    "styled-components": "^6.1.14",
+    "undefined": "expo-google-fonts/roboto"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

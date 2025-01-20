@@ -5,27 +5,25 @@ import PropTypes from "prop-types";
 const Container = styled.View`
     flex-direction: column;
     width: 100%;
-    margin: 10px 0;
+    margin-bottom: 20px;
 `;
 
 const Label = styled.Text`
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: ${({ theme, isFocused }) => (isFocused ? theme.text : theme.label)};
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: ${({ theme }) => theme.text};
 `;
 
 const StyledTextInput = styled.TextInput.attrs(({ theme }) => ({
     placeholderTextColor: theme.inputPlaceholder,
 }))`
-    background-color: ${({ theme, editable }) => 
-        editable ? theme.inputAbledBackground : theme.inputDisabledBackground};
     color: ${({ theme }) => theme.text};
-    padding: 20px 10px;
+    padding: 12px 0;
     font-size: 16px;
-    border: 1px solid
-        ${({ theme, isFocused }) => (isFocused ? theme.text : theme.inputBorder)};
-    border-radius: 4px;
+    border-bottom-width: 1px;
+    border-bottom-color: ${({ theme, isFocused }) =>
+        isFocused ? theme.inputBorderActive : theme.inputBorder};
 `;
 
 const Input = forwardRef(
@@ -44,12 +42,11 @@ const Input = forwardRef(
         },
         ref
     ) => {
-
         const [isFocused, setIsFocused] = useState(false);
 
         return (
             <Container>
-                <Label isFocused={isFocused}>{label}</Label>
+                <Label>{label}</Label>
                 <StyledTextInput
                     ref={ref}
                     isFocused={isFocused}
@@ -84,7 +81,7 @@ Input.propTypes = {
     onBlur: PropTypes.func,
     placeholder: PropTypes.string,
     isPassword: PropTypes.bool,
-    returnKeyType: PropTypes.oneOf(['done', 'next']),
+    returnKeyType: PropTypes.oneOf(["done", "next"]),
     maxLength: PropTypes.number,
     disabled: PropTypes.bool,
 };
