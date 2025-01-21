@@ -1,5 +1,9 @@
+<a href="https://club-project-one.vercel.app/" target="_blank">
+<img src="./assets/banner.png" alt="배너" width="100%"/>
+</a>
+
 # Habit 365
-**Habit365**는 React Native와 Expo를 사용하여 개발된 스마트 습관 추적 애플리케이션입니다. 사용자는 매일 습관을 생성, 추적, 관리하며 진행 상황을 효율적으로 확인할 수 있습니다. Firebase를 활용하여 백엔드와 데이터베이스를 관리하고, Expo를 통해 iOS와 Android 플랫폼에서 손쉽게 배포할 수 있습니다.
+**Habit365**는 React Native와 Expo를 사용하여 개발된 습관 관리 애플리케이션입니다. 사용자는 습관을 생성, 관리하며 진행 상황을 확인할 수 있습니다. Firebase를 활용하여 백엔드와 데이터베이스를 관리하고, Expo를 통해 iOS와 Android 플랫폼에서 손쉽게 배포할 수 있습니다.
 
 <br/>
 
