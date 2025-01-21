@@ -9,6 +9,7 @@ import { collection, addDoc, query, where, getDocs, updateDoc, getDoc, doc, dele
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { scheduleUserHabitNotification } from './Notification';
 
+// function: 로그인 //
 export const login = async ({ email, password }) => {
     try {
         const { user } = await signInWithEmailAndPassword(auth, email, password);
@@ -19,6 +20,7 @@ export const login = async ({ email, password }) => {
     }
 };
 
+// function: 이미지 업로드 //
 const uploadImage = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -40,6 +42,7 @@ const uploadImage = async (uri) => {
     return await getDownloadURL(snapshot.ref);
 };
 
+// function: 회원가입 //
 export const signup = async ({ email, password, name, photoUrl }) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -61,6 +64,7 @@ export const signup = async ({ email, password, name, photoUrl }) => {
     }
 };
 
+// function: 현재 사용자 정보 가져오기 //
 export const getCurrentUser = () => {
     const user = auth.currentUser;
     if (!user) {
@@ -70,19 +74,7 @@ export const getCurrentUser = () => {
     return { uid, name: displayName, email, photoUrl: photoURL };
 };
 
-export const updateUserPhoto = async (photoUrl) => {
-    const user = auth.currentUser;
-    if (!user) {
-        throw new Error('No authenticated user found');
-    }
-    const storageUrl = typeof photoUrl === 'string' && photoUrl.startsWith('https')
-        ? photoUrl
-        : await uploadImage(photoUrl);
-
-    await updateProfile(user, { photoURL: storageUrl });
-    return { name: user.displayName, email: user.email, photoUrl: user.photoURL };
-};
-
+// function: 습관 추가 //
 export const addHabit = async (habitData) => {
     try {
         const user = auth.currentUser;
@@ -106,6 +98,7 @@ export const addHabit = async (habitData) => {
     }
 };
 
+// function: 습관 조회 //
 export const getHabit = async (userId) => {
     try {
         const q = query(collection(db, "habits"), where("userId", "==", userId));
@@ -139,6 +132,7 @@ export const getHabit = async (userId) => {
     }
 };
 
+// function: 습관 업데이트 //
 export const updateHabit = async (habitId, newProgress) => {
     try {
         const habitRef = doc(db, "habits", habitId);
@@ -159,6 +153,7 @@ export const updateHabit = async (habitId, newProgress) => {
     }
 };
 
+// function: 습관 삭제 //
 export const deleteHabit = async (habitId) => {
     try {
         const habitRef = doc(db, "habits", habitId);
@@ -171,6 +166,7 @@ export const deleteHabit = async (habitId) => {
     }
 };
 
+// function: 체크박스 상태 업데이트 //
 export const updateCheckboxState = async (habitId, checkboxes, date) => {
     try {
         const habitRef = doc(db, "habits", habitId);
@@ -215,7 +211,7 @@ export const updateCheckboxState = async (habitId, checkboxes, date) => {
     }
 };
 
-
+// function: 체크박스 상태 가져오기 //
 export const getCheckboxState = async (habitId) => {
     try {
         const habitRef = doc(db, "habits", habitId);

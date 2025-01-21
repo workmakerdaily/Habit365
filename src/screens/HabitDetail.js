@@ -6,12 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     flex: 1;
     background-color: ${({ theme }) => theme.background};
     padding: 20px;
 `;
 
+// styled: 제목 스타일 //
 const Title = styled.Text`
     font-size: 24px;
     font-weight: bold;
@@ -19,23 +21,27 @@ const Title = styled.Text`
     margin-bottom: 10px;
 `;
 
+// styled: 일반 텍스트 스타일 //
 const Text = styled.Text`
     font-size: 16px;
     color: ${({ theme }) => theme.detailText};
     margin-bottom: 5px;
 `;
 
+// styled: 리스트 컨테이너 스타일 //
 const ListContainer = styled.View`
     flex: 1;
     margin-top: 20px;
 `;
 
+// styled: 행 스타일 //
 const Row = styled.View`
     flex-direction: row;
     justify-content: flex-start;
     margin-bottom: 10px;
 `;
 
+// styled: 체크박스 아이템 스타일 //
 const CheckboxItem = styled.View`
     flex: 1;
     max-width: 30%;
@@ -51,15 +57,18 @@ const CheckboxItem = styled.View`
     margin: 5px;
 `;
 
+// styled: 체크박스 아이콘 스타일 //
 const CheckboxIcon = styled.TouchableOpacity`
     margin-bottom: 10px;
 `;
 
+// styled: 체크박스 텍스트 스타일 //
 const ItemText = styled.Text`
     font-size: 18px;
     color: ${({ theme }) => theme.ItemText};
 `;
 
+// styled: 삭제 버튼 스타일 //
 const DeleteButton = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
@@ -73,6 +82,15 @@ const DeleteButton = styled.TouchableOpacity`
     elevation: 5;
 `;
 
+// styled: 삭제 버튼 텍스트 스타일 //
+const DeleteText = styled.Text`
+    font-size: 16px;
+    color: ${({ theme }) => theme.deleteText};
+    font-weight: bold;
+    margin-left: 10px;
+`;
+
+// styled: 그라디언트 배경 스타일 //
 const Gradient = styled(LinearGradient)`
     flex: 1;
     flex-direction: row;
@@ -82,21 +100,19 @@ const Gradient = styled(LinearGradient)`
     border-radius: 25px;
 `;
 
-const DeleteText = styled.Text`
-    font-size: 16px;
-    color: ${({ theme }) => theme.deleteText};
-    font-weight: bold;
-    margin-left: 10px;
-`;
-
+// component: HabitDetail 함수 //
 const HabitDetail = ({ route }) => {
+
+    // state: 체크박스 상태 관리 //
     const { habit } = route.params;
     const [checkboxes, setCheckboxes] = useState(
         Array.from({ length: habit.goal }, () => false)
     );
 
+    // function: 네비게이터 함수 //
     const navigation = useNavigation();
 
+    // effect: firestore에서 체크박스 상태 가져오기 //
     useEffect(() => {
         const fetchCheckboxState = async () => {
             try {
@@ -135,6 +151,7 @@ const HabitDetail = ({ route }) => {
         fetchCheckboxState();
     }, [habit.id]);
 
+    // function: 체크박스 상태 토글 함수 //
     const handleCheckboxToggle = async (index) => {
         const updatedCheckboxes = [...checkboxes];
         updatedCheckboxes[index] = !updatedCheckboxes[index];
@@ -153,6 +170,7 @@ const HabitDetail = ({ route }) => {
         await updateHabitCompletionStatus(habit.id, isCompleted);
     };
 
+    // event handler: 습관 삭제 이벤트 처리 //
     const handleDeleteHabit = async () => {
         Alert.alert('삭제 확인', `${habit.project}를(을) 삭제하시겠습니까?`, [
             { text: '취소', style: 'cancel' },
@@ -173,6 +191,7 @@ const HabitDetail = ({ route }) => {
         ]);
     };
 
+    // render: HabitDetail 렌더링 //
     return (
         <Container>
             <Title>{habit.project}</Title>

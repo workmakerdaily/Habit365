@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const TRANSPARENT = 'transparent';
 
+// styled: 컨테이너 스타일 //
 const Container = styled.TouchableOpacity`
     background-color: ${({ theme, isFilled }) =>
         isFilled ? theme.buttonBackground : TRANSPARENT};
@@ -14,6 +15,7 @@ const Container = styled.TouchableOpacity`
     opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
+// styled: 텍스트 스타일 //
 const Title = styled.Text`
     height: 30px;
     line-height: 30px;
@@ -22,7 +24,10 @@ const Title = styled.Text`
         isFilled ? theme.buttonTitle : theme.buttonUnfilledTitle};
 `;
 
+// component: Button //
 const Button = ({ containerStyle, title, onPress, isFilled = true, disabled }) => {
+
+    // render: Button 컴포넌트 렌더링 //
     return (
         <Container
             style={containerStyle}

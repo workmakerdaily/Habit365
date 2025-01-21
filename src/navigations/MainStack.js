@@ -10,19 +10,23 @@ import { ProgressContext, UserContext } from "../contexts";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Alert } from "react-native";
 
-
+// styled: 로그아웃 버튼 스타일 //
 const LogoutButton = styled.TouchableOpacity`
     margin-right: 16px;
 `;
 
+// variable: 스택 네비게이션 //
 const Stack = createStackNavigator();
 
+// component: MainStack 함수 //
 const MainStack = () => {
 
+    // context: 테마, 사용자, 진행 상태 컨텍스트 //
     const theme = useContext(ThemeContext);
     const { dispatch } = useContext(UserContext);
     const { spinner } = useContext(ProgressContext);
 
+    // function: 로그아웃 처리 함수 //
     const handleLogout = async () => {
         try {
             spinner.start();
@@ -35,6 +39,7 @@ const MainStack = () => {
         }
     };
 
+    // function: 로그아웃 확인 알림창 함수 //
     const showLogoutAlert = () => {
         Alert.alert(
             "로그아웃",
@@ -47,6 +52,7 @@ const MainStack = () => {
         );
     };
 
+    // render: MainStack 네비게이션 렌더링 //
     return (
         <Stack.Navigator
             initialRouteName="MainTab"

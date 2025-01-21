@@ -9,6 +9,7 @@ import { Alert } from "react-native";
 import { signup } from "../utils/firebase";
 import { ProgressContext, UserContext } from "../contexts";
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     flex: 1;
     justify-content: center;
@@ -17,6 +18,7 @@ const Container = styled.View`
     padding: 40px 20px;
 `;
 
+// styled: 에러 텍스트 스타일 //
 const ErrorText = styled.Text`
     align-items: center;
     width: 100%;
@@ -26,12 +28,14 @@ const ErrorText = styled.Text`
     color: ${({ theme }) => theme.errorText};
 `;
 
+// component: Signup 함수 //
 const Signup = () => {
 
+    // context: 사용자 및 진행 상태 컨텍스트 //
     const { dispatch } = useContext(UserContext);
-
     const { spinner } = useContext(ProgressContext);
 
+    // state: 입력 데이터 상태 //
     const [photoUrl, setPhotoUrl] = useState(images.photo);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -40,11 +44,13 @@ const Signup = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [disabled, setDisabled] = useState(true);
 
+    // ref: 입력 필드 참조 //
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
     const didMountRef = useRef();
 
+    // effect: 입력값 유효성 검사 //
     useEffect(() => {
         if (didMountRef.current) {
             let _errorMessage = '';
@@ -66,13 +72,15 @@ const Signup = () => {
         }
     }, [name, email, password, passwordConfirm]);
 
+    // effect: 버튼 활성화 상태 관리 //
     useEffect(() => {
         setDisabled(
             !(name && email && password && passwordConfirm && !errorMessage)
         );
     }, [name, email, password, passwordConfirm, errorMessage]);
 
-    const _handleSignupButtonPress = async () => {
+    // event handler: 회원가입 버튼 클릭 이벤트 처리 //
+    const handleSignupButtonPress = async () => {
         try {
             spinner.start();
             const user = await signup({ email, password, name, photoUrl});
@@ -84,6 +92,7 @@ const Signup = () => {
         }
     };
 
+    // render: Signup 화면 렌더링 //
     return (
         <KeyboardAwareScrollView extraScrollHeight={20}>
             <Container>
@@ -129,7 +138,7 @@ const Signup = () => {
                     label="비밀번호 확인"
                     value={passwordConfirm}
                     onChangeText={text => setPasswordConfirm(removeWhitespace(text))}
-                    onSubmitEditing={_handleSignupButtonPress}
+                    onSubmitEditing={handleSignupButtonPress}
                     placeholder="위와 동일한 비밀번호를 입력해주세요."
                     returnKeyType="done"
                     isPassword
@@ -137,7 +146,7 @@ const Signup = () => {
                 <ErrorText>{errorMessage}</ErrorText>
                 <Button
                     title="회원가입"
-                    onPress={_handleSignupButtonPress}
+                    onPress={handleSignupButtonPress}
                     disabled={disabled}
                 />
             </Container>

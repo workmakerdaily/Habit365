@@ -6,6 +6,7 @@ import { ProgressContext, UserContext } from "../contexts";
 import { Task } from '../components';
 import { useFocusEffect } from '@react-navigation/native';
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     flex: 1;
     justify-content: center;
@@ -14,6 +15,7 @@ const Container = styled.View`
     background-color: ${({ theme }) => theme.background};
 `;
 
+// styled: 리스트 스타일 //
 const List = styled.ScrollView.attrs(() => ({
     contentContainerStyle: {
         alignItems: 'center',
@@ -23,14 +25,20 @@ const List = styled.ScrollView.attrs(() => ({
     width: ${({ width }) => width - 40}px;
 `;
 
+// component: HabitHome 함수 //
 const HabitHome = () => {
+
+    // variable: 화면 너비 //
     const width = Dimensions.get('window').width;
 
+    // context: 사용자 및 진행 상태 컨텍스트 //
     const { user } = useContext(UserContext);
     const { spinner } = useContext(ProgressContext);
 
+    // state: 습관 데이터 상태 //
     const [habits, setHabits] = useState([]);
 
+    // function: firestore에서 습관 데이터 가져오기 함수 //
     const fetchHabits = async () => {
         try {
             spinner.start();
@@ -95,12 +103,14 @@ const HabitHome = () => {
         }
     };
 
+    // effect: 화면 포커스 시 습관 데이터 가져오기 //
     useFocusEffect(
         React.useCallback(() => {
             fetchHabits();
         }, [])
     );
 
+    // render: HabitHome 렌더링 //
     return (
         <Container>
             <List width={width}>

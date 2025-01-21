@@ -9,6 +9,7 @@ import { Alert } from "react-native";
 import { login } from "../utils/firebase";
 import { ProgressContext, UserContext } from "../contexts";
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     flex: 1;
     justify-content: center;
@@ -19,6 +20,7 @@ const Container = styled.View`
     padding-bottom: ${({ insets: { bottom } }) => bottom}px;
 `;
 
+// styled: 에러 텍스트 스타일 //
 const ErrorText = styled.Text`
     align-itmes: flex-start;
     width: 100%;
@@ -28,25 +30,32 @@ const ErrorText = styled.Text`
     color: ${({ theme }) => theme.errorText};
 `;
 
+// component: Login 함수 //
 const Login = ({ navigation }) => {
 
+    // context: 사용자 및 진행 상태 컨텍스트 //
     const { dispatch } = useContext(UserContext);
-
     const { spinner } = useContext(ProgressContext);
 
+    // variable: 안전 영역 삽입값 //
     const insets = useSafeAreaInsets();
 
+    // state: 이메일, 비밀번호 및 상태 //
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const passwrodRef = useRef();
     const [errorMessage, setErrorMessage] = useState('');
     const [disabled, setDisabled] = useState(true);
 
+    // ref: 비밀번호 입력 필드 참조 //
+    const passwrodRef = useRef();
+
+    // effect: 버튼 활성화 상태 관리 //
     useEffect(() => {
         setDisabled(!(email && password && !errorMessage));
     }, [email, password, errorMessage]);
 
-    const _handleEmailChange = email => {
+    // function: 이메일 변경 처리 함수 //
+    const handleEmailChange = email => {
         const changedEmail = removeWhitespace(email);
         setEmail(changedEmail);
         setErrorMessage(
@@ -54,11 +63,13 @@ const Login = ({ navigation }) => {
         );
     };
 
-    const _handlePasswordChange = password => {
+    // function: 비밀번호 변경 처리 함수 //
+    const handlePasswordChange = password => {
         setPassword(removeWhitespace(password));
     }
 
-    const _handleLoginButtonPress = async () => {
+    // event handler: 로그인 버튼 클릭 이벤트 처리리 //
+    const handleLoginButtonPress = async () => {
         try {
             spinner.start();
             const user = await login({ email, password });
@@ -70,6 +81,7 @@ const Login = ({ navigation }) => {
         }
     };
 
+    // render: Login 렌더링 //
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{ flex: 1 }}
@@ -80,7 +92,7 @@ const Login = ({ navigation }) => {
                 <Input
                     label="이메일"
                     value={email}
-                    onChangeText={_handleEmailChange}
+                    onChangeText={handleEmailChange}
                     onSubmitEditing={() => passwrodRef.current.focus()}
                     placeholder="이메일을 입력하세요."
                     returnKeyType="next"
@@ -89,8 +101,8 @@ const Login = ({ navigation }) => {
                     ref={passwrodRef}
                     label="비밀번호"
                     value={password}
-                    onChangeText={_handlePasswordChange}
-                    onSubmitEditing={_handleLoginButtonPress}
+                    onChangeText={handlePasswordChange}
+                    onSubmitEditing={handleLoginButtonPress}
                     placeholder="비밀번호를 입력하세요."
                     returnKeyType="done"
                     isPassword
@@ -98,7 +110,7 @@ const Login = ({ navigation }) => {
                 <ErrorText>{errorMessage}</ErrorText>
                 <Button
                     title="로그인"
-                    onPress={_handleLoginButtonPress}
+                    onPress={handleLoginButtonPress}
                     disabled={disabled}
                 />
                 <Button

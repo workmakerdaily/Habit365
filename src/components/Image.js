@@ -5,11 +5,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Alert, Platform } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     align-self: center;
     margin-bottom: 30px;
 `;
 
+// styled: 이미지 스타일 //
 const StyledImage = styled.Image`
     background-color: ${({ theme }) => theme.imageBackground};
     width: 100px;
@@ -17,6 +19,7 @@ const StyledImage = styled.Image`
     border-radius: ${({ rounded }) => (rounded ? 50 : 0)}px;
 `;
 
+// styled: 버튼 컨테이너 스타일 //
 const ButtonContainer = styled.TouchableOpacity`
     background-color: ${({ theme }) => theme.imageButtonBackground};
     position: absolute;
@@ -29,6 +32,7 @@ const ButtonContainer = styled.TouchableOpacity`
     align-items: center;
 `;
 
+// styled: 버튼 아이콘 스타일 //
 const ButtonIcon = styled(MaterialIcons).attrs({
     name: 'photo-camera',
     size: 22,
@@ -36,7 +40,10 @@ const ButtonIcon = styled(MaterialIcons).attrs({
     color: ${({ theme }) => theme.imageButtonIcon};
 `;
 
+// component: PhotoButton //
 const PhotoButton = ({ onPress }) => {
+    
+    // render: PhotoButton 컴포넌트 렌더링 //
     return (
         <ButtonContainer onPress={onPress}>
             <ButtonIcon />
@@ -44,8 +51,10 @@ const PhotoButton = ({ onPress }) => {
     );
 };
 
+// component: Image //
 const Image = ({ url, imageStyle, rounded, showButton = false, onChangeImage = () => { } }) => {
 
+    // effect: 권한 요청 //
     useEffect(() => {
         (async () => {
             try {
@@ -64,7 +73,8 @@ const Image = ({ url, imageStyle, rounded, showButton = false, onChangeImage = (
         })();
     }, []);
 
-    const _handleEditButton = async () => {
+    // function: 이미지 편집 버튼 핸들러 //
+    const handleEditButton = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -84,10 +94,11 @@ const Image = ({ url, imageStyle, rounded, showButton = false, onChangeImage = (
         }
     };
 
+    // render: Image 컴포넌트 렌더링 //
     return (
         <Container>
             <StyledImage source={{ uri: url }} style={imageStyle} rounded={rounded} />
-            {showButton && <PhotoButton onPress={_handleEditButton} />}
+            {showButton && <PhotoButton onPress={handleEditButton} />}
         </Container>
     );
 };

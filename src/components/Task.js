@@ -7,27 +7,30 @@ import Input from './Input';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
+// styled: 컨테이너 스타일 //
 const Container = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     background-color: ${({ theme }) => theme.habitBackground};
     border-radius: 12px;
-    border: 1px solid ${({ theme, isCompleted }) => 
+    border: 1px solid ${({ theme, isCompleted }) =>
         isCompleted ? theme.unHabitTask : theme.habitTask};
     padding: 15px 20px;
     margin: 8px 0px;
 `;
 
+// styled: 콘텐츠 스타일 //
 const Contents = styled.Text`
     flex: 1;
     font-size: 18px;
     font-weight: 600;
-    color: ${({ theme, isCompleted }) => 
+    color: ${({ theme, isCompleted }) =>
         isCompleted ? theme.unHabitText : theme.habitText};
 `;
 
-const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
+// component: Task //
+const Task = ({ item }) => {
 
     const navigation = useNavigation();
     const route = useRoute();
@@ -42,27 +45,10 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
         }
     };
 
+    // render: Task 컴포넌트 렌더링 //
     return (
         <Container onPress={onPress} isCompleted={route.name === 'HabitHome' ? item.isCompleted : false}>
-            {/* <IconButton
-                type={item.completed ? images.completed : images.uncompleted}
-                id={item.id}
-                onPressOut={toggleTask}
-                completed={item.completed}
-            /> */}
             <Contents isCompleted={route.name === 'HabitHome' ? item.isCompleted : false}>{item.project}</Contents>
-            {/* <IconButton
-                type={images.update}
-                id={item.id}
-                onPressOut={updateTask}
-                completed={item.completed}
-            /> */}
-            {/* <IconButton
-                type={images.delete}
-                id={item.id}
-                onPressOut={deleteTask}
-                completed={item.completed}
-            /> */}
             {route.name === 'HabitHome' && (
                 item.isCompleted ? (
                     <MaterialIcons
@@ -85,9 +71,6 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
 
 Task.prototype = {
     item: PropTypes.object.isRequired,
-    // deleteTask: PropTypes.func.isRequired,
-    // toggleTask: PropTypes.func.isRequired,
-    // updateTask: PropTypes.func.isRequired,
 };
 
 export default Task;

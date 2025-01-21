@@ -2,12 +2,14 @@ import React, { useState, forwardRef } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     flex-direction: column;
     width: 100%;
     margin-bottom: 20px;
 `;
 
+// styled: 라벨 스타일 //
 const Label = styled.Text`
     font-size: 16px;
     font-weight: bold;
@@ -15,6 +17,7 @@ const Label = styled.Text`
     color: ${({ theme }) => theme.text};
 `;
 
+// styled: 텍스트 입력 스타일 //
 const StyledTextInput = styled.TextInput.attrs(({ theme }) => ({
     placeholderTextColor: theme.inputPlaceholder,
 }))`
@@ -26,6 +29,7 @@ const StyledTextInput = styled.TextInput.attrs(({ theme }) => ({
         isFocused ? theme.inputBorderActive : theme.inputBorder};
 `;
 
+// component: Input //
 const Input = forwardRef(
     (
         {
@@ -42,8 +46,10 @@ const Input = forwardRef(
         },
         ref
     ) => {
+        // state: 포커스 상태 //
         const [isFocused, setIsFocused] = useState(false);
 
+        // render: Input 컴포넌트 렌더링 //
         return (
             <Container>
                 <Label>{label}</Label>

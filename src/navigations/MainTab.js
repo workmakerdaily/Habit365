@@ -4,12 +4,16 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { HabitHome, HabitAdd, NotificationMain } from "../screens";
 import { ThemeContext } from "styled-components/native";
 
+// variable: Tab 네비게이션 //
 const Tab = createBottomTabNavigator();
 
+// component: TabBarIcon 함수 //
 const TabBarIcon = ({ focused, name }) => {
 
+    // context: 테마 컨텍스트 //
     const theme = useContext(ThemeContext);
 
+    // render: TabBarIcon 렌더링 //
     return (
         <MaterialIcons
             name={name}
@@ -19,10 +23,13 @@ const TabBarIcon = ({ focused, name }) => {
     );
 };
 
+// component: MainTab 함수 //
 const MainTab = ({ navigation, route }) => {
 
+    // context: 테마 컨텍스트 //
     const theme = useContext(ThemeContext);
 
+    // effect: 헤더 제목 동적 업데이트 // 
     useEffect(() => {
         const titles = route.state?.routeNames || ['Habit365'];
         const index = route.state?.index || 0;
@@ -34,7 +41,8 @@ const MainTab = ({ navigation, route }) => {
             },
         });
     }, [route]);
-
+    
+    // render: MainTab 렌더링 //
     return (
         <Tab.Navigator
             tabBarOptions={{

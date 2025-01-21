@@ -7,6 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getHabit } from "../utils/firebase";
 import { Task } from "../components";
 
+// styled: 컨테이너 스타일 //
 const Container = styled.View`
     flex: 1;
     align-items: center;
@@ -14,6 +15,7 @@ const Container = styled.View`
     padding-top : 20px;
 `;
 
+// styled: 제목 텍스트 스타일 //
 const Title = styled.Text`
     font-size: 18px;
     font-weight: bold;
@@ -21,23 +23,7 @@ const Title = styled.Text`
     margin-bottom: 8px;
 `;
 
-const NotificationButton = styled.TouchableOpacity`
-    background-color: ${({ theme }) => theme.primary};
-    padding: 12px 20px;
-    border-radius: 25px;
-    shadow-color: #000;
-    shadow-offset: 0px 3px;
-    shadow-opacity: 0.1;
-    shadow-radius: 4px;
-    elevation: 3;
-`;
-
-const ButtonText = styled.Text`
-    font-size: 16px;
-    color: ${({ theme }) => theme.buttonText};
-    font-weight: bold;
-`;
-
+// styled: 습관 리스트 스타일 //
 const List = styled.ScrollView.attrs(() => ({
     contentContainerStyle: {
         alignItems: 'center',
@@ -48,43 +34,53 @@ const List = styled.ScrollView.attrs(() => ({
     margint-top: ${({ height }) => height * 0.02}px;
 `;
 
+// component: NotificationMain 함수 //
 const NotificationMain = () => {
 
+    // variable: 화면 너비와 높이 //
     const width = Dimensions.get('window').width;
     const height = Dimensions.get('window').height;
 
+    // context: 사용자 및 진행 상태 컨텍스트 //
     const { user } = useContext(UserContext);
     const { spinner } = useContext(ProgressContext);
 
+    // state: 습관 데이터 상태 //
     const [habits, setHabits] = useState([]);
 
-    Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-            shouldShowAlert: true,
-            shouldPlaySound: false,
-            shouldSetBadge: false,
-        }),
-    });
+    // effect: 알림  핸들러 설정 //
+    useEffect(() => {
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: false,
+                shouldSetBadge: false,
+            }),
+        });
+    }, []);
 
-        const fetchHabits = async () => {
-            try {
-                spinner.start();
-                const userId = user.uid;
-                const data = await getHabit(userId);
-                setHabits(data);
-            } catch (e) {
-                console.error("Error fetching habits:", e.message);
-            } finally {
-                spinner.stop();
-            }
-        };
-    
-        useFocusEffect(
-            React.useCallback(() => {
-                fetchHabits();
-            }, [])
-        );
+    // function: firestore에서 습관 데이터 가져오기 함수 //
+    const fetchHabits = async () => {
+        try {
+            spinner.start();
+            const userId = user.uid;
+            const data = await getHabit(userId);
+            setHabits(data);
+        } catch (e) {
+            console.error("Error fetching habits:", e.message);
+        } finally {
+            spinner.stop();
+        }
+    };
 
+    // effect: 화면 포커스 시 습관 데이터 새로고침 //
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchHabits();
+        }, [])
+    );
+
+    // effect: 알림 관한 요청 //
     useEffect(() => {
         (async () => {
             const { status } = await Notifications.requestPermissionsAsync();
@@ -94,31 +90,19 @@ const NotificationMain = () => {
         })();
     }, []);
 
-    const sendNotification = async () => {
-        await Notifications.scheduleNotificationAsync({
-            content: {
-                title: "알림 제목 테스트",
-                body: "알림 내용 테스트",
-            },
-            trigger: null,
-        });
-    };
-
+    // render: NotificationMain 렌더링 //
     return (
         <Container height={height}>
             <Title>알림 설정</Title>
             <List width={width} height={height}>
-                                {Object.values(habits)
-                                        .reverse()
-                                        .map(habit => (
-                                            <Task key={habit.id}
-                                                item={habit}
-                                            />
-                                        ))}
-                            </List>
-            {/* <NotificationButton onPress={sendNotification}>
-                <ButtonText>테스트 알림 보내기</ButtonText>
-            </NotificationButton> */}
+                {Object.values(habits)
+                    .reverse()
+                    .map(habit => (
+                        <Task key={habit.id}
+                            item={habit}
+                        />
+                    ))}
+            </List>
         </Container>
     );
 };

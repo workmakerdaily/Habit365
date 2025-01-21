@@ -1,6 +1,7 @@
 import * as Notifications from "expo-notifications";
 import { auth } from "../../firebaseConfig";
 
+// function: 알림 권한 요청 //
 export const requestNotificationPermissions = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     if (status !== "granted") {
@@ -10,7 +11,7 @@ export const requestNotificationPermissions = async () => {
     }
 };
 
-// 알림 예약
+// function: 알림 예약 //
 export const scheduleNotification = async ({ title, body, hour, minute }) => {
     try {
         await Notifications.scheduleNotificationAsync({
@@ -31,6 +32,7 @@ export const scheduleNotification = async ({ title, body, hour, minute }) => {
     }
 };
 
+// function: 사용자 습관 알림 예약 //
 export const scheduleUserHabitNotification = async (habit) => {
     try {
         const user = auth.currentUser;
